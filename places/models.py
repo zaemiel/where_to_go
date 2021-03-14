@@ -13,3 +13,14 @@ class Place(models.Model):
 
     class Meta:
         ordering = ['title']
+
+
+class Image(models.Model):
+    photo = models.ImageField(upload_to='places', max_length=250)
+    place = models.ForeignKey(Place, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.photo)
+
+    class Meta:
+        ordering = ['photo']
