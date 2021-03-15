@@ -75,7 +75,7 @@ L.geoJSON(places, {
       marker.on('click', function(event){
         log.debug('Feature selected', geoJsonPoint);
         sidebar.show();
-        loadPlaceInfo(geoJsonPoint.properties.placeId, geoJsonPoint.properties.detailsUrl);
+        loadPlaceInfo(geoJsonPoint.properties.placeId);
       });
       return marker;
     }
@@ -133,12 +133,12 @@ map.on('click', function () {
   sidebarApp.loadingPlaceId = null;
 })
 
-async function loadPlaceInfo(placeId, detailsUrl){
+async function loadPlaceInfo(placeId){
   sidebarApp.selectedPlace = null;
   sidebarApp.loadingPlaceId = placeId;
 
   try {
-    let response = await fetch(detailsUrl);
+    let response = await fetch(`http://${window.location.host}/place/${placeId}`);
 
     if (!response.ok){
       return;
