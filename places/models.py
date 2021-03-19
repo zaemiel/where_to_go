@@ -2,12 +2,12 @@ from django.db import models
 
 
 class Place(models.Model):
-    title = models.CharField(max_length=200)
-    placeId = models.CharField(max_length=200, null=True)
-    description_short = models.TextField(blank=True, null=True)
-    description_long = models.TextField(blank=True, null=True)
-    lat = models.FloatField()
-    long = models.FloatField()
+    title = models.CharField(max_length=200, verbose_name='Название')
+    placeId = models.CharField(max_length=200, verbose_name='ID места')
+    description_short = models.TextField(blank=True, verbose_name='Короткое описание')
+    description_long = models.TextField(blank=True, verbose_name='Длинное описание')
+    lat = models.FloatField(verbose_name='Широта')
+    long = models.FloatField(verbose_name='Долгота')
 
     @property
     def coordinates(self):
@@ -19,14 +19,14 @@ class Place(models.Model):
         return images_urls
 
     def __str__(self):
-        return str(self.title)
+        return self.title
 
     class Meta:
         ordering = ['title']
 
 
 class Image(models.Model):
-    photo = models.ImageField(upload_to='places', max_length=250)
+    photo = models.ImageField(upload_to='places')
     place = models.ForeignKey(Place, related_name='images', on_delete=models.CASCADE)
 
     @property
@@ -35,6 +35,3 @@ class Image(models.Model):
 
     def __str__(self):
         return str(self.photo)
-
-    class Meta:
-        ordering = ['photo']
