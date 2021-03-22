@@ -1,3 +1,4 @@
+from django.core import serializers
 from django.shortcuts import render
 
 from django.forms.models import model_to_dict
@@ -7,7 +8,28 @@ from .models import Place
 
 
 def index(request):
-    return render(request, 'index.html')
+    places_geojson = {
+        'type': 'FeatureCollection',
+        'features': []
+    }
+
+    for place in Place.objects.all():
+        place_geojson = {
+            'type': 'Feature',
+            'geometry': {
+                'type': 'Point',
+                'coordinates': [place.lat, place.long]
+            },
+            'properties': {
+                'title': place.title,
+                'placeId': place.placeId,
+                'detailsUrl': ''
+            }
+        }
+
+        places_geojson['features'].append(place_geojson)
+
+    return render(request, 'index.html', context={'places_geojson': places_geojson})
 
 
 def place_view(request, place_id):
@@ -16,6 +38,5 @@ def place_view(request, place_id):
     place_dict = model_to_dict(place)
     place_dict.update({
         'imgs': place.imgs,
-        'coordinates': place.coordinates
     })
     return JsonResponse(place_dict)
