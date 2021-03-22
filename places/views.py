@@ -1,7 +1,9 @@
 from django.core import serializers
 from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 
 from django.forms.models import model_to_dict
+from django.http import HttpResponse
 from django.http import JsonResponse
 
 from .models import Place
@@ -32,7 +34,17 @@ def index(request):
     return render(request, 'index.html', context={'places_geojson': places_geojson})
 
 
-def place_view(request, place_id):
+def place_view(request, id):
+    place = get_object_or_404(Place, id=id)
+
+    place_dict = model_to_dict(place)
+    place_dict.update({
+        'imgs': place.imgs,
+    })
+    return JsonResponse(place_dict, json_dumps_params={'ensure_ascii': False, 'indent': 2})
+
+
+def place_detail_view(request, place_id):
     place = Place.objects.get(placeId=place_id)
 
     place_dict = model_to_dict(place)
