@@ -26,8 +26,9 @@ class Place(models.Model):
 
 
 class Image(models.Model):
-    photo = models.ImageField(upload_to='places')
+    photo = models.ImageField(upload_to='places', verbose_name='Картинка')
     place = models.ForeignKey(Place, related_name='images', on_delete=models.CASCADE)
+    position = models.IntegerField(default=1, blank=True, verbose_name='Позиция')
 
     @property
     def url(self):
@@ -35,3 +36,6 @@ class Image(models.Model):
 
     def __str__(self):
         return str(self.photo)
+
+    class Meta:
+        ordering = ['position']
