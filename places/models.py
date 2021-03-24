@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.html import mark_safe
 
 
 class Place(models.Model):
@@ -33,6 +34,11 @@ class Image(models.Model):
     @property
     def url(self):
         return self.photo.url
+
+    @property
+    def thumbnail(self):
+        if self.photo:
+            return mark_safe(f'<img src="{self.url}" height="200">')
 
     def __str__(self):
         return str(self.photo)
