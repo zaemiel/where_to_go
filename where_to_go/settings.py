@@ -24,8 +24,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
-DEBUG = os.environ['DEBUG']
-SECRET_KEY = os.environ['SECRET_KEY']
+DEBUG = os.environ.get('DEBUG', 'False')
+SECRET_KEY = os.environ.get('SECRET_KEY', '+hy_8*u)-v(bc9&apq!i9d)s@y4f^km%@n5rsdd5&fp-n57oh1')
 
 ALLOWED_HOSTS = []
 
@@ -124,12 +124,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_ROOT = os.environ['STATIC_ROOT']
 
 STATIC_URL = '/static/'
+
 STATICFILES_DIRS = [
     BASE_DIR.joinpath('static')
 ]
+
+STATIC_ROOT = os.environ['STATIC_ROOT']
+
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR.joinpath('media/')
