@@ -1,6 +1,15 @@
 # Where to go Django app
 Simple sharing places project built with Django 3, Vue.js 2 and using of OpenStreetMaps.
 
+Demo website:
+[http://anuctal.pythonanywhere.com/](http://anuctal.pythonanywhere.com/)
+
+Admin credentials:
+
+    login: demo
+    password: demo
+
+
 # Installation
 1. Create a virtual environment:
 
@@ -30,7 +39,7 @@ Simple sharing places project built with Django 3, Vue.js 2 and using of OpenStr
 
 6. Add to the `.env` file the following variables:
 
-        DEBUG = True
+        DEBUG = False
         SECRET_KEY = 'your_secret_key'
 
 7. Create a superuser:
