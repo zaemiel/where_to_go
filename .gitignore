@@ -1,5 +1,7 @@
 __pycache__/
 media/
+*.jpeg
+*.jpg
 *.pyc
 *.sqlite3
 .env
