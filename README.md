@@ -49,3 +49,26 @@ Admin credentials:
 8. Run Django dev server:
 
         ./manage.py runserver
+
+
+# The load_place command
+The project has the load_place custom command, that loads a Place data into DB
+
+`./manage.py load_place <url_to_json>`
+
+The command handles JSON data in the following format:
+
+```json
+{
+    "title": "A hamburger",
+    "imgs": [
+        "https://images.pexels.com/photos/1639557/pexels-photo-1639557.jpeg"
+    ],
+    "description_short": "A tasty hamburger",
+    "description_long": "Description of the tasty hamburger",
+    "coordinates": {
+        "lng": "37.64912239999976",
+        "lat": "55.77754550000014"
+    }
+}
+```
