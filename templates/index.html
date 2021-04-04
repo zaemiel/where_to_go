@@ -35,9 +35,11 @@
 
         <img v-if="mainPhotoSrc" v-bind:src="mainPhotoSrc" class="d-block shadow mb-3 rounded" v-bind:alt="selectedPlace.title">
 
+        {% verbatim %}
         <h5 class="mb-3">{{ selectedPlace.title }}</h5>
 
-        <p>{{ selectedPlace.short_description }}</p>
+        <p v-html="selectedPlace.short_description"></p>
+        {% endverbatim %}
 
         <div id="place-photos" class="carousel slide mb-3 shadow" data-ride="carousel" data-interval="5000">
           <ol class="carousel-indicators">
@@ -71,11 +73,10 @@
 
 </head>
 <body>
-  {% verbatim %}
+
   <div id="sidebar">
     <div id="sidebar-app"></div>
   </div>
-  {% endverbatim %}
 
   <div id="map"></div>
 
