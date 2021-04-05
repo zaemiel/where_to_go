@@ -32,6 +32,13 @@ def get_serialized_place(url):
     response.raise_for_status()
     content = response.json()
 
+    image_urls = content.get('imgs', [])
+
+    if image_urls:
+        images = download_images(image_urls)
+    else:
+        images = []
+
     place_serialized = {
         'title': content['title'],
         'description_short': content.get('description_short', ''),
@@ -39,7 +46,7 @@ def get_serialized_place(url):
         # lat/long are mixed in jsons or in frontend part
         'lat': content['coordinates']['lng'],
         'lng': content['coordinates']['lat'],
-        'imgs': download_images(content.get('imgs'))
+        'imgs': images
     }
 
     return place_serialized
