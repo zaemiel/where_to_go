@@ -61,21 +61,18 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         place = PlaceJSON(options['url'])
 
-        image_objects = []
-        for image in place.imgs:
-            image_obj = Image()
-            image_obj.photo.save(image.name, image, save=True)
-            image_objects.append(image_obj)
-
         place_obj, created = Place.objects.get_or_create(
             title=place.title,
-            description_short=place.description_short,
-            description_long=place.description_long,
             lat=place.lat,
             long=place.lng,
         )
 
-        for image in image_objects:
-            place_obj.images.add(image)
+        for image in place.imgs:
+            image_obj = Image()
+            image_obj.photo.save(image.name, image, save=True)
+            place_obj.images.add(image_obj)
 
+            place_obj.description_short = place.description_short
+            place_obj.description_long = place.description_long
+        
         place_obj.save()
