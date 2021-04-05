@@ -1,6 +1,7 @@
 from django.db import models
 from tinymce import models as tinymce_models
 from django.utils.html import mark_safe
+from django.urls import reverse
 
 
 class Place(models.Model):
@@ -18,6 +19,9 @@ class Place(models.Model):
     def imgs(self):
         images_urls = [photo.url for photo in self.images.all()]
         return images_urls
+
+    def get_absolute_url(self):
+        return reverse('place_details_url', args=[self.id])
 
     def __str__(self):
         return self.title

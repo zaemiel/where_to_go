@@ -23,7 +23,7 @@ def index(request):
             'properties': {
                 'id': place.id,
                 'title': place.title,
-                'detailsUrl': ''
+                'detailsUrl': place.get_absolute_url()
             }
         }
 
