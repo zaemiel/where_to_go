@@ -64,7 +64,7 @@ class Command(BaseCommand):
             image_obj.photo.save(image.name, image, save=True)
             image_objects.append(image_obj)
 
-        new_place_obj, created = Place.objects.get_or_create(
+        place_obj, created = Place.objects.get_or_create(
             title=place.title,
             description_short=place.description_short,
             description_long=place.description_long,
@@ -73,6 +73,6 @@ class Command(BaseCommand):
         )
 
         for image in image_objects:
-            new_place_obj.images.add(image)
+            place_obj.images.add(image)
 
-        new_place_obj.save()
+        place_obj.save()
