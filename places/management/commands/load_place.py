@@ -1,6 +1,9 @@
 from concurrent.futures import ThreadPoolExecutor
 import json
 
+from pathlib import Path
+from urllib.parse import urlparse
+
 from django.core.management.base import BaseCommand
 from django.core.files.base import ContentFile
 
@@ -14,7 +17,7 @@ def make_request(url):
     r.raise_for_status()
 
     if not 'text/plain' in r.headers['Content-Type']:
-        filename = url.split('/')[-1]
+        filename = Path(urlparse(url).path).name
         image = ContentFile(r.content, name=filename)
         return image
     return r.json()
