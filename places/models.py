@@ -5,7 +5,6 @@ from django.utils.html import mark_safe
 
 class Place(models.Model):
     title = models.CharField(max_length=200, verbose_name='Название')
-    placeId = models.CharField(max_length=200, verbose_name='ID места')
     description_short = tinymce_models.HTMLField(blank=True, verbose_name='Короткое описание')
     description_long = tinymce_models.HTMLField(blank=True, verbose_name='Длинное описание')
     lat = models.FloatField(verbose_name='Широта')
