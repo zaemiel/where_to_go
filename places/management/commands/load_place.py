@@ -12,15 +12,13 @@ import requests
 from places.models import Place, Image
 
 
-def make_request(url):
+def download_image(url):
     r = requests.get(url)
     r.raise_for_status()
 
-    if not 'text/plain' in r.headers['Content-Type']:
-        filename = Path(urlparse(url).path).name
-        image = ContentFile(r.content, name=filename)
-        return image
-    return r.json()
+    filename = Path(urlparse(url).path).name
+    image = ContentFile(r.content, name=filename)
+    return image
 
 
 class PlaceJSON:
@@ -29,7 +27,9 @@ class PlaceJSON:
         self._read_json()
 
     def _read_json(self):
-        content = make_request(self.url)
+        response = requests.get(self.url)
+        response.raise_for_status()
+        content = response.json()
 
         self.title = content.get('title')
         self.description_short = content.get('description_short', '')
@@ -47,7 +47,7 @@ class PlaceJSON:
 
     def _get_images(self):
         with ThreadPoolExecutor(len(self._imgs)) as executor:
-            images = executor.map(make_request, self._imgs)
+            images = executor.map(download_image, self._imgs)
 
         return list(images)
 
