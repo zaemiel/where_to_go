@@ -67,12 +67,12 @@ class Command(BaseCommand):
             long=place.lng,
         )
 
+        place_obj.description_short = place.description_short
+        place_obj.description_long = place.description_long
+
         for image in place.imgs:
             image_obj = Image(place=place_obj)
             image_obj.photo.save(image.name, image, save=True)
             place_obj.images.add(image_obj)
-
-            place_obj.description_short = place.description_short
-            place_obj.description_long = place.description_long
 
         place_obj.save()
