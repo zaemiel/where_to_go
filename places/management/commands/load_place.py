@@ -1,5 +1,4 @@
 from concurrent.futures import ThreadPoolExecutor
-from io import BytesIO
 import json
 from pathlib import Path
 from time import time_ns
@@ -7,7 +6,6 @@ from time import time_ns
 from django.core.management.base import BaseCommand
 from django.core.files.base import ContentFile
 
-from PIL import Image as pil_image
 import requests
 
 from places.models import Place, Image
@@ -18,10 +16,8 @@ def make_request(url):
     r.raise_for_status()
 
     if not 'text/plain' in r.headers['Content-Type']:
-        # image = pil_image.open(BytesIO(r.content))
         filename = url.split('/')[-1]
         image = ContentFile(r.content, name=filename)
-        # image.filename =
         return image
     return r.json()
 
