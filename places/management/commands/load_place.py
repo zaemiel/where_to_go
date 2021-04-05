@@ -1,7 +1,5 @@
 from concurrent.futures import ThreadPoolExecutor
 import json
-from pathlib import Path
-from time import time_ns
 
 from django.core.management.base import BaseCommand
 from django.core.files.base import ContentFile
@@ -20,24 +18,6 @@ def make_request(url):
         image = ContentFile(r.content, name=filename)
         return image
     return r.json()
-
-def rus_to_lat(sentence):
-    rus_lat = {
-        'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'e',
-        'ж': 'g', 'з': 'z', 'и': 'i', 'й': 'j', 'к': 'k', 'л': 'l', 'м': 'm',
-        'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'у': 'u',
-        'ф': 'f', 'х': 'x', 'ц': 'c', 'ч': 'ch', 'ш': 'sh', 'ъ': '', 'ы': 'y',
-        'ь': '', 'э': 'e', 'ю': 'u', 'я': 'ja'
-    }
-
-    transliterated = ''
-    for letter in sentence.lower():
-        if letter == ' ':
-            transliterated += '_'
-        else:
-            transliterated += rus_lat.get(letter, letter)
-
-    return transliterated
 
 
 class PlaceJSON:
@@ -58,16 +38,9 @@ class PlaceJSON:
         self._imgs = content.get('imgs')
         self.imgs = self._get_images()
 
-        self.place_id = self._set_place_id()
-
     @property
     def coordinates(self):
         return self.lat, self.lng
-
-    def _set_place_id(self):
-        if self.title:
-            return rus_to_lat(self.title)
-        return str(time_ns())
 
     def _get_images(self):
         with ThreadPoolExecutor(len(self._imgs)) as executor:
@@ -93,7 +66,6 @@ class Command(BaseCommand):
 
         new_place_obj, created = Place.objects.get_or_create(
             title=place.title,
-            placeId=place.place_id,
             description_short=place.description_short,
             description_long=place.description_long,
             lat=place.lat,
