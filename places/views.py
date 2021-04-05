@@ -35,8 +35,8 @@ def index(request):
 def place_view(request, id):
     place = get_object_or_404(Place, id=id)
 
-    place_dict = model_to_dict(place)
-    place_dict.update({
+    place_serialized = model_to_dict(place)
+    place_serialized.update({
         'imgs': place.imgs,
     })
-    return JsonResponse(place_dict, json_dumps_params={'ensure_ascii': False, 'indent': 2})
+    return JsonResponse(place_serialized, json_dumps_params={'ensure_ascii': False, 'indent': 2})
