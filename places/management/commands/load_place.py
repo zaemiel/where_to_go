@@ -1,5 +1,4 @@
 from concurrent.futures import ThreadPoolExecutor
-import json
 
 from pathlib import Path
 from urllib.parse import urlparse
@@ -21,35 +20,29 @@ def download_image(url):
     return image
 
 
-class PlaceJSON:
-    def __init__(self, url):
-        self.url = url
-        self._read_json()
+def download_images(image_urls):
+    with ThreadPoolExecutor(len(image_urls)) as executor:
+        images = executor.map(download_image, image_urls)
 
-    def _read_json(self):
-        response = requests.get(self.url)
-        response.raise_for_status()
-        content = response.json()
+    return list(images)
 
-        self.title = content.get('title')
-        self.description_short = content.get('description_short', '')
-        self.description_long = content.get('description_long', '')
+
+def get_serialized_place(url):
+    response = requests.get(url)
+    response.raise_for_status()
+    content = response.json()
+
+    place_serialized = {
+        'title': content['title'],
+        'description_short': content.get('description_short', ''),
+        'description_long': content.get('description_long', ''),
         # lat/long are mixed in jsons or in frontend part
-        self.lat = content.get('coordinates').get('lng')
-        self.lng = content.get('coordinates').get('lat')
+        'lat': content['coordinates']['lng'],
+        'lng': content['coordinates']['lat'],
+        'imgs': download_images(content.get('imgs'))
+    }
 
-        self._imgs = content.get('imgs')
-        self.imgs = self._get_images()
-
-    @property
-    def coordinates(self):
-        return self.lat, self.lng
-
-    def _get_images(self):
-        with ThreadPoolExecutor(len(self._imgs)) as executor:
-            images = executor.map(download_image, self._imgs)
-
-        return list(images)
+    return place_serialized
 
 
 class Command(BaseCommand):
@@ -59,18 +52,18 @@ class Command(BaseCommand):
         parser.add_argument('url', type=str)
 
     def handle(self, *args, **options):
-        place = PlaceJSON(options['url'])
+        place = get_serialized_place(options['url'])
 
         place_obj, created = Place.objects.get_or_create(
-            title=place.title,
-            lat=place.lat,
-            long=place.lng,
+            title=place['title'],
+            lat=place['lat'],
+            long=place['lng'],
         )
 
-        place_obj.description_short = place.description_short
-        place_obj.description_long = place.description_long
+        place_obj.description_short = place.get('description_short')
+        place_obj.description_long = place.get('description_long')
 
-        for image in place.imgs:
+        for image in place.get('imgs'):
             image_obj = Image(place=place_obj)
             image_obj.photo.save(image.name, image, save=True)
             place_obj.images.add(image_obj)
