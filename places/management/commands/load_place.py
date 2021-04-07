@@ -43,9 +43,8 @@ def get_serialized_place(url):
         'title': content['title'],
         'description_short': content.get('description_short', ''),
         'description_long': content.get('description_long', ''),
-        # lat/long are mixed in jsons or in frontend part
-        'lat': content['coordinates']['lng'],
-        'lng': content['coordinates']['lat'],
+        'lat': content['coordinates']['lat'],
+        'lng': content['coordinates']['lng'],
         'imgs': images
     }
 

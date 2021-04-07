@@ -13,7 +13,21 @@ class Place(models.Model):
 
     @property
     def coordinates(self):
-        return self.lat, self.long
+        """
+        GPS coordinates are represented as an [latitude, longitude] array.
+
+        Latitude is a geographic coordinate that specifies the north–south position of a point on the Earth's surface (https://en.wikipedia.org/wiki/Latitude).
+
+        Longitude is a geographic coordinate that specifies the east–west position of a point on the Earth's surface (https://en.wikipedia.org/wiki/Longitude).
+
+        Thus the latitude is the position of the point on the Y-axis.
+        And the longitude is the postition of the point on the X-axis.
+
+        But in GeoJSON format the order of elements must follow x, y, z order (easting, northing, altitude for coordinates in a projected coordinate reference system, or longitude, latitude, altitude for coordinates in a geographic coordinate reference system).
+
+        Source: https://geojson.org/geojson-spec.html#positions
+        """
+        return self.long, self.lat
 
     @property
     def imgs(self):
