@@ -21,6 +21,9 @@ def download_image(url):
 
 
 def download_images(image_urls):
+    if not image_urls:
+        return []
+
     with ThreadPoolExecutor(len(image_urls)) as executor:
         images = executor.map(download_image, image_urls)
 
@@ -34,18 +37,13 @@ def get_serialized_place(url):
 
     image_urls = content.get('imgs', [])
 
-    if image_urls:
-        images = download_images(image_urls)
-    else:
-        images = []
-
     place_serialized = {
         'title': content['title'],
         'description_short': content.get('description_short', ''),
         'description_long': content.get('description_long', ''),
         'lat': content['coordinates']['lat'],
         'lng': content['coordinates']['lng'],
-        'imgs': images
+        'imgs': download_images(image_urls)
     }
 
     return place_serialized
